@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, VoyagrActivity!</string>
+    <string name="app_name">Voyagr</string>
+    <string name="username">username</string>
+    <string name="password">password</string>
+    <string name="loginbutton">Log My Ass In</string>
+    <string name="logodescription">Voyagr</string>
+    <string name="lastlocation">Last location reported</string>
+    <string name="lastchecktextdefault">not recently</string>
+    <string name="gpsdebugtextdefault">(waiting for GPS data)</string>
+    <string name="reportlocation">Report Location</string>
+    <string name="durationselect">Report location every</string>
+    <string-array name="GPSPushDurations">
+        <item >as fast as possible</item>
+        <item >1 second</item>
+        <item >5 seconds</item>
+        <item >10 seconds</item>
+        <item >15 seconds</item>
+        <item >30 seconds</item>
+        <item >45 seconds</item>
+        <item >1 minute</item>
+        <item >2 minutes</item>
+        <item >3 minutes</item>
+        <item >5 minutes</item>
+        <item >15 minutes</item>
+        <item >30 minutes</item>
+        <item >45 minutes</item>
+        <item >1 hour</item>
+    </string-array>
+
+</resources>
