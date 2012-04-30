@@ -4,7 +4,6 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
@@ -21,13 +20,13 @@ import com.jakemcginty.voyagr.internet.ReportPostService;
 public class VoyagrService extends Service implements LocationListener {
 
 	public static final String LOCATION_UPDATE = "com.jakemcginty.voyagr.VoyagrService.LOCATION_UPDATE";
-	private final String ns = Context.NOTIFICATION_SERVICE;
     private NotificationManager mNM;
     private static final int VOYAGR_ID = 1;
 	boolean reportGPS=true;
 	LocationManager lm;
 	private final String tag = "VoyagrService";
 	private String postURL="http://jake.su/report";
+	private long duration = 0L;
 	
 	public VoyagrService() {
 		super();
@@ -54,11 +53,12 @@ public class VoyagrService extends Service implements LocationListener {
         CharSequence voyagrText  = "Currently reporting your position.";
         Notification notification = new Notification(icon, voyagrText, System.currentTimeMillis());
 
-        Intent notificationIntent = new Intent(this,VoyagrActivity.class);
+        Intent notificationIntent = new Intent(this,ReportingActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         notification.setLatestEventInfo(getApplicationContext(), voyagrTitle, voyagrText, contentIntent);
         notification.flags |= Notification.FLAG_ONGOING_EVENT;
-        mNM.notify(VOYAGR_ID, notification);
+        startForeground(1, notification);
+        //mNM.notify(VOYAGR_ID, notification);
         lm = (LocationManager) getSystemService(LOCATION_SERVICE);
 		lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0f, VoyagrService.this);
         Log.d(tag, "VoyagrService created.");
@@ -73,35 +73,8 @@ public class VoyagrService extends Service implements LocationListener {
 	@Override
 	public void onLocationChanged(Location location) {
 		/* If they don't want us to report, then we will skip the update. */
-		if (!reportGPS) return;
-
 		Log.d(tag, "Location Changed: " + location.toString());
 
-		StringBuilder sb = new StringBuilder(512);
-
-		/* display some of the data in the TextView */
-
-		sb.append("Londitude: ");
-		sb.append(location.getLongitude());
-		sb.append('\n');
-
-		sb.append("Latitude: ");
-		sb.append(location.getLatitude());
-		sb.append('\n');
-
-		sb.append("Altitiude: ");
-		sb.append(location.getAltitude());
-		sb.append('\n');
-
-		sb.append("Accuracy: ");
-		sb.append(location.getAccuracy());
-		sb.append('\n');
-
-		sb.append("Timestamp: ");
-		sb.append(location.getTime());
-		sb.append('\n');
-
-		//mGPSDebugInfo.setText(sb.toString());
 		Intent intent = new Intent(this, ReportPostService.class);
 		intent.putExtra("location", location);
 		intent.putExtra("postURL", postURL);
@@ -154,8 +127,18 @@ public class VoyagrService extends Service implements LocationListener {
     // RemoteService for a more complete example.
 	private final IBinder mBinder = new LocalBinder();
 
-	private void changeCheckDuration(long duration) {
+	synchronized void setTrackingDuration(long duration) {
+		this.duration = duration;
+		startTracking();
+	}
+
+	synchronized void startTracking() {
 		lm.removeUpdates(VoyagrService.this);
 		lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, duration, 0f, VoyagrService.this);
 	}
+	
+	synchronized void stopTracking() {
+		lm.removeUpdates(this);
+	}
+	
 }

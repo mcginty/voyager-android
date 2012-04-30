@@ -20,6 +20,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,19 +37,20 @@ public class ReportingActivity extends Activity  {
 	Spinner  mDurationSelect;
 	long     lastReport = 0L;
 
-
 	public class ReportPostReceiver extends BroadcastReceiver {
+		public ReportPostReceiver() {
+			super();
+		}
+		
         @Override
         public void onReceive(Context context, Intent intent) {  
         	Log.d(tag, "braodcast received with intent action " + intent.getAction());
-            if (intent.getAction().equals(Intent.ACTION_EDIT)) {
-            	Toast.makeText(ReportingActivity.this, "Broadcast Received.", Toast.LENGTH_SHORT);
+            if (intent.getAction().equals(VoyagrService.LOCATION_UPDATE)) {
             	lastReport = intent.getLongExtra("lastReport", lastReport);
             }
         }
 	}
 	BroadcastReceiver receiver = new ReportPostReceiver();
-    IntentFilter receiverFilter = new IntentFilter();
 
 	private ServiceConnection mConnection = new ServiceConnection() {
 	    public void onServiceConnected(ComponentName className, IBinder service) {
@@ -93,6 +96,7 @@ public class ReportingActivity extends Activity  {
 	}
 
 	private String humanTimeDifference(long t1, long t2) {
+		if (t1 == 0) return "(waiting)";
 		long diff = t2-t1;
 		if (diff < 1000) return "<1 second"; else diff = diff / 1000;
 		if (diff < 60)   return diff + " second" + (diff>1?"s":"") + " ago"; else diff = diff / 60;
@@ -115,8 +119,17 @@ public class ReportingActivity extends Activity  {
 
 		mLastCheckText.post(onEverySecond);
 		doBindService();
-		receiverFilter.addAction(Intent.ACTION_EDIT);
 
+		mReportCheck.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (isChecked) {
+					mBoundService.startTracking();
+				} else {
+					mBoundService.stopTracking();
+				}
+			}
+		});
 		/* Attempt to make the domain pretty when presenting it to the user */
 		try {
 			mToURLText.setText("to " + new URL(postURL).getHost());
@@ -148,8 +161,8 @@ public class ReportingActivity extends Activity  {
 					Log.d(tag, "New duration in milliseconds: " + duration);
 				}
 
-				/* Reset LocationManager update requests with the new interval time. */
-				// TODO reset this shit
+				/* Tell our service to start tracking. */
+				mBoundService.setTrackingDuration(duration);
 			}
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
@@ -169,7 +182,7 @@ public class ReportingActivity extends Activity  {
 		 * add location listener and request updates every 1000 ms or 10 meters
 		 */
     	Log.d(tag, "Registering receiver with receiverFilter.");
-		registerReceiver(receiver, receiverFilter);
+		registerReceiver(receiver, new IntentFilter(VoyagrService.LOCATION_UPDATE));
 		super.onResume();
 	}
 

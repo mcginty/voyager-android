@@ -19,7 +19,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.util.Log;
 
-import com.jakemcginty.voyagr.ReportingActivity.ReportPostReceiver;
+import com.jakemcginty.voyagr.VoyagrService;
 
 public class ReportPostService extends IntentService {
 
@@ -54,8 +54,8 @@ public class ReportPostService extends IntentService {
 
 			Log.d(tag, "POST data for location "+location.toString()+" succeeded with status " + response.getStatusLine());
 
-			Intent i = new Intent(ReportPostService.this, ReportPostReceiver.class);
-			i.setAction(Intent.ACTION_EDIT);
+			Intent i = new Intent();
+			i.setAction(VoyagrService.LOCATION_UPDATE);
 			i.putExtra("lastReport", new Date().getTime());
 			sendBroadcast(i);
 	    } catch (ClientProtocolException e) {
