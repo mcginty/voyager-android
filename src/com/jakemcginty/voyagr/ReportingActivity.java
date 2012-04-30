@@ -1,29 +1,20 @@
 package com.jakemcginty.voyagr;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.location.LocationProvider;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -36,21 +27,78 @@ import android.widget.Toast;
 public class ReportingActivity extends Activity  {
 
 	static final String tag = "Reporter"; // for Log
-
-	private String postURL="http://10.0.2.2:8081/report";
+	private VoyagrService mBoundService;
+	private boolean mIsBound = false;
+	private String postURL="http://jake.su/report";
 	TextView mLastCheckText, mGPSDebugInfo, mToURLText;
 	CheckBox mReportCheck;
 	Spinner  mDurationSelect;
 	long     lastReport = 0L;
 
+
+	public class ReportPostReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {  
+        	Log.d(tag, "braodcast received with intent action " + intent.getAction());
+            if (intent.getAction().equals(Intent.ACTION_EDIT)) {
+            	Toast.makeText(ReportingActivity.this, "Broadcast Received.", Toast.LENGTH_SHORT);
+            	lastReport = intent.getLongExtra("lastReport", lastReport);
+            }
+        }
+	}
+	BroadcastReceiver receiver = new ReportPostReceiver();
+    IntentFilter receiverFilter = new IntentFilter();
+
+	private ServiceConnection mConnection = new ServiceConnection() {
+	    public void onServiceConnected(ComponentName className, IBinder service) {
+	        // This is called when the connection with the service has been
+	        // established, giving us the service object we can use to
+	        // interact with the service.  Because we have bound to a explicit
+	        // service that we know is running in our own process, we can
+	        // cast its IBinder to a concrete class and directly access it.
+	        mBoundService = ((VoyagrService.LocalBinder)service).getService();
+
+	        // Tell the user about this for our demo.
+	        Toast.makeText(ReportingActivity.this, "Local Service connected",
+	                Toast.LENGTH_SHORT).show();
+	    }
+
+	    public void onServiceDisconnected(ComponentName className) {
+	        // This is called when the connection with the service has been
+	        // unexpectedly disconnected -- that is, its process crashed.
+	        // Because it is running in our same process, we should never
+	        // see this happen.
+	        mBoundService = null;
+	        Toast.makeText(ReportingActivity.this, "Local Service disconnected",
+	                Toast.LENGTH_SHORT).show();
+	    }
+	};
+	
+	void doBindService() {
+	    // Establish a connection with the service.  We use an explicit
+	    // class name because we want a specific service implementation that
+	    // we know will be running in our own process (and thus won't be
+	    // supporting component replacement by other applications).
+	    bindService(new Intent(ReportingActivity.this, 
+	            VoyagrService.class), mConnection, Context.BIND_AUTO_CREATE);
+	    mIsBound = true;
+	}
+
+	void doUnbindService() {
+	    if (mIsBound) {
+	        // Detach our existing connection.
+	        unbindService(mConnection);
+	        mIsBound = false;
+	    }
+	}
+
 	private String humanTimeDifference(long t1, long t2) {
 		long diff = t2-t1;
 		if (diff < 1000) return "<1 second"; else diff = diff / 1000;
-		if (diff < 60) return diff + " second" + (diff>1?"s":"") + " ago"; else diff = diff / 60;
-		if (diff < 60) return diff + " minute" + (diff>1?"s":"") + " ago"; else diff = diff / 60;
-		if (diff < 60) return diff + " hour"   + (diff>1?"s":"") + " ago"; else diff = diff / 24;
-		if (diff < 3) return diff + " day"    + (diff>1?"s":"") + " ago";
-		return "not recently";
+		if (diff < 60)   return diff + " second" + (diff>1?"s":"") + " ago"; else diff = diff / 60;
+		if (diff < 60)   return diff + " minute" + (diff>1?"s":"") + " ago"; else diff = diff / 60;
+		if (diff < 60)   return diff + " hour"   + (diff>1?"s":"") + " ago"; else diff = diff / 24;
+		if (diff < 3)    return diff + " day"    + (diff>1?"s":"") + " ago"; return "not recently";
 	}
 
 	/** Called when the activity is first created. */
@@ -66,6 +114,8 @@ public class ReportingActivity extends Activity  {
 		mDurationSelect = (Spinner)  findViewById(R.id.durationSelect);
 
 		mLastCheckText.post(onEverySecond);
+		doBindService();
+		receiverFilter.addAction(Intent.ACTION_EDIT);
 
 		/* Attempt to make the domain pretty when presenting it to the user */
 		try {
@@ -78,11 +128,9 @@ public class ReportingActivity extends Activity  {
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				String value = mDurationSelect.getAdapter().getItem(position).toString();
 				long duration = 5L * 1000L; // default duration in milliseconds if we can't parse for some reason
-				float dist = 100f;
 				Log.d(tag,"Item " + position + " selected with id " + id + ". Maps to: " + value);
 				if (value.indexOf("fast as possible") > -1) {
 					duration = 0L;
-					dist = 0f;
 				} else {
 					Matcher matcher = Pattern.compile("(\\d+) (seconds?|minutes?|hours?)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL).matcher(value);
 					matcher.find();
@@ -101,15 +149,13 @@ public class ReportingActivity extends Activity  {
 				}
 
 				/* Reset LocationManager update requests with the new interval time. */
-				lm.removeUpdates(ReportingActivity.this);
-				lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, duration, dist, ReportingActivity.this);
+				// TODO reset this shit
 			}
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
 				Log.w(tag, "Nothing was selected for some stupid weird inexplicable reason. Heading to the bomb shelter.");
 			}
         });
-        lm = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         Log.d(tag, "Reporting activity created");
     }
@@ -122,18 +168,18 @@ public class ReportingActivity extends Activity  {
 		 *
 		 * add location listener and request updates every 1000 ms or 10 meters
 		 */
-		lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10f, this);
+    	Log.d(tag, "Registering receiver with receiverFilter.");
+		registerReceiver(receiver, receiverFilter);
 		super.onResume();
 	}
 
     @Override
 	protected void onPause() {
 		/* GPS, as it turns out, consumes battery like crazy */
-		lm.removeUpdates(this);
+    	Log.d(tag, "Unregistering receiver...");
+    	unregisterReceiver(receiver);
 		super.onPause();
 	}
-
-
 
 	@Override
 	protected void onStop() {
@@ -148,4 +194,10 @@ public class ReportingActivity extends Activity  {
 	    	mLastCheckText.postDelayed(onEverySecond, 1000);
 	    }
 	};
+
+	@Override
+	protected void onDestroy() {
+	    super.onDestroy();
+	    doUnbindService();
+	}
 }
