@@ -35,17 +35,16 @@ public final class R {
         public static final int reporter=0x7f030001;
     }
     public static final class string {
-        public static final int app_name=0x7f050001;
-        public static final int durationselect=0x7f05000a;
-        public static final int gpsdebugtextdefault=0x7f050008;
-        public static final int hello=0x7f050000;
-        public static final int lastchecktextdefault=0x7f050007;
-        public static final int lastlocation=0x7f050006;
-        public static final int loginbutton=0x7f050004;
-        public static final int logodescription=0x7f050005;
-        public static final int password=0x7f050003;
-        public static final int reportlocation=0x7f050009;
-        public static final int username=0x7f050002;
+        public static final int app_name=0x7f050000;
+        public static final int durationselect=0x7f050009;
+        public static final int gpsdebugtextdefault=0x7f050007;
+        public static final int lastchecktextdefault=0x7f050006;
+        public static final int lastlocation=0x7f050005;
+        public static final int loginbutton=0x7f050003;
+        public static final int logodescription=0x7f050004;
+        public static final int password=0x7f050002;
+        public static final int reportlocation=0x7f050008;
+        public static final int username=0x7f050001;
     }
     public static final class xml {
         public static final int syncadapter=0x7f040000;

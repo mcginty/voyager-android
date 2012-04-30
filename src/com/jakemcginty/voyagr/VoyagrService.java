@@ -1,7 +1,6 @@
 package com.jakemcginty.voyagr;
 
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
@@ -20,8 +19,6 @@ import com.jakemcginty.voyagr.internet.ReportPostService;
 public class VoyagrService extends Service implements LocationListener {
 
 	public static final String LOCATION_UPDATE = "com.jakemcginty.voyagr.VoyagrService.LOCATION_UPDATE";
-    private NotificationManager mNM;
-    private static final int VOYAGR_ID = 1;
 	boolean reportGPS=true;
 	LocationManager lm;
 	private final String tag = "VoyagrService";
@@ -45,25 +42,11 @@ public class VoyagrService extends Service implements LocationListener {
 
     @Override
     public void onCreate() {
-        mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-
-        // Display a notification about us starting.  We put an icon in the status bar.
-        int icon = R.drawable.ic_launcher;
-        CharSequence voyagrTitle = "Voyagr";
-        CharSequence voyagrText  = "Currently reporting your position.";
-        Notification notification = new Notification(icon, voyagrText, System.currentTimeMillis());
-
-        Intent notificationIntent = new Intent(this,ReportingActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-        notification.setLatestEventInfo(getApplicationContext(), voyagrTitle, voyagrText, contentIntent);
-        notification.flags |= Notification.FLAG_ONGOING_EVENT;
-        startForeground(1, notification);
-        //mNM.notify(VOYAGR_ID, notification);
         lm = (LocationManager) getSystemService(LOCATION_SERVICE);
-		lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0f, VoyagrService.this);
+        startTracking();
         Log.d(tag, "VoyagrService created.");
     }
-    
+
     @Override
     public void onDestroy() {
     	super.onDestroy();
@@ -135,10 +118,21 @@ public class VoyagrService extends Service implements LocationListener {
 	synchronized void startTracking() {
 		lm.removeUpdates(VoyagrService.this);
 		lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, duration, 0f, VoyagrService.this);
+
+        // Display a notification about us starting.  We put an icon in the status bar.
+        int icon = R.drawable.ic_launcher;
+        CharSequence voyagrTitle = "Voyagr";
+        CharSequence voyagrText  = "Currently reporting your position.";
+        Notification notification = new Notification(icon, voyagrText, System.currentTimeMillis());
+        Intent notificationIntent = new Intent(this,ReportingActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        notification.setLatestEventInfo(getApplicationContext(), voyagrTitle, voyagrText, contentIntent);
+        notification.flags |= Notification.FLAG_ONGOING_EVENT;
+        startForeground(1, notification);
 	}
-	
+
 	synchronized void stopTracking() {
 		lm.removeUpdates(this);
+		stopForeground(true);
 	}
-	
 }

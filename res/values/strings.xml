@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hello">Hello World, VoyagrActivity!</string>
-    <string name="app_name">Voyagr</string>
+    <string name="app_name">Voyager</string>
     <string name="username">username</string>
     <string name="password">password</string>
     <string name="loginbutton">Log My Ass In</string>
