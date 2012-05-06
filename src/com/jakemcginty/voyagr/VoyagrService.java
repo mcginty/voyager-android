@@ -15,15 +15,16 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.jakemcginty.voyagr.internet.ReportPostService;
+import com.jakemcginty.voyagr.preferences.Prefs;
 
 public class VoyagrService extends Service implements LocationListener {
 
-	public static final String LOCATION_UPDATE = "com.jakemcginty.voyagr.VoyagrService.LOCATION_UPDATE";
+	public static final String LOCATION_UPDATE = Prefs.broadcastAction;
 	boolean reportGPS=true;
 	LocationManager lm;
 	private final String tag = "VoyagrService";
-	private String postURL="http://jake.su/report";
-	private long duration = 0L;
+	private String postURL = Prefs.defaultPostURL;
+	private long duration = Prefs.defaultDuration;
 	
 	public VoyagrService() {
 		super();
@@ -49,6 +50,7 @@ public class VoyagrService extends Service implements LocationListener {
 
     @Override
     public void onDestroy() {
+    	stopTracking();
     	super.onDestroy();
         Log.d(tag, "VoyagrService destroyed.");
     }
@@ -120,7 +122,7 @@ public class VoyagrService extends Service implements LocationListener {
 		lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, duration, 0f, VoyagrService.this);
 
         // Display a notification about us starting.  We put an icon in the status bar.
-        int icon = R.drawable.ic_launcher;
+        int icon = R.drawable.ic_stat_voyagr;
         CharSequence voyagrTitle = "Voyagr";
         CharSequence voyagrText  = "Currently reporting your position.";
         Notification notification = new Notification(icon, voyagrText, System.currentTimeMillis());

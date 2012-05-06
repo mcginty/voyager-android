@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.jakemcginty.voyagr.preferences.Prefs;
+
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -13,6 +15,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -27,15 +31,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ReportingActivity extends Activity  {
-
-	static final String tag = "Reporter"; // for Log
+	SharedPreferences settings;
+	static final String tag = "ReportingActivity"; // for Log
 	private VoyagrService mBoundService;
 	private boolean mIsBound = false;
-	private String postURL="http://jake.su/report";
 	TextView mLastCheckText, mGPSDebugInfo, mToURLText;
 	CheckBox mReportCheck;
 	Spinner  mDurationSelect;
+	private String postURL;
 	long     lastReport = 0L;
+	Location lastLocation = null;
 
 	public class ReportPostReceiver extends BroadcastReceiver {
 		public ReportPostReceiver() {
@@ -46,7 +51,8 @@ public class ReportingActivity extends Activity  {
         public void onReceive(Context context, Intent intent) {  
         	Log.d(tag, "braodcast received with intent action " + intent.getAction());
             if (intent.getAction().equals(VoyagrService.LOCATION_UPDATE)) {
-            	lastReport = intent.getLongExtra("lastReport", lastReport);
+            	lastReport   = intent.getLongExtra("lastReport", lastReport);
+            	lastLocation = intent.getParcelableExtra("location");
             }
         }
 	}
@@ -110,6 +116,9 @@ public class ReportingActivity extends Activity  {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.reporter);
+		
+		settings = getSharedPreferences(Prefs.prefsName, 0);
+		postURL = settings.getString("postURL", Prefs.defaultPostURL);
 
 		mLastCheckText  = (TextView) findViewById(R.id.lastCheckText);
 		mGPSDebugInfo   = (TextView) findViewById(R.id.GPSDebugText);
@@ -141,7 +150,7 @@ public class ReportingActivity extends Activity  {
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				String value = mDurationSelect.getAdapter().getItem(position).toString();
 				long duration = 5L * 1000L; // default duration in milliseconds if we can't parse for some reason
-				Log.d(tag,"Item " + position + " selected with id " + id + ". Maps to: " + value);
+				Log.d(tag,"Item " +position+ " selected with id " +id+ ". Maps to: " +value);
 				if (value.indexOf("fast as possible") > -1) {
 					duration = 0L;
 				} else {
@@ -158,7 +167,7 @@ public class ReportingActivity extends Activity  {
 							duration = Long.valueOf(matcher.group(1)) * 60L * 60L * 1000L;
 						// else duration will remain the default duration
 					}
-					Log.d(tag, "New duration in milliseconds: " + duration);
+					Log.d(tag, "New duration in milliseconds: " +duration);
 				}
 
 				/* Tell our service to start tracking. */
@@ -182,6 +191,7 @@ public class ReportingActivity extends Activity  {
 		 * add location listener and request updates every 1000 ms or 10 meters
 		 */
     	Log.d(tag, "Registering receiver with receiverFilter.");
+    	lastReport = settings.getLong("lastReport", lastReport);
 		registerReceiver(receiver, new IntentFilter(VoyagrService.LOCATION_UPDATE));
 		super.onResume();
 	}
@@ -196,13 +206,23 @@ public class ReportingActivity extends Activity  {
 
 	@Override
 	protected void onStop() {
-		/* may as well just finish since saving the state is not important for this toy app */
-		finish();
 		super.onStop();
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putString("postURL", postURL);
+		finish();
 	}
 
 	private Runnable onEverySecond=new Runnable() {
 	    public void run() {
+	    	if (lastLocation != null) {
+		    	String gpsInfo = (new StringBuilder())
+		    	  .append("Latitude: ").append(lastLocation.getLatitude())
+		    	  .append("\nLongitude: ").append(lastLocation.getLongitude())
+		    	  .append("\nAltitude: ").append(lastLocation.getAltitude()).append(" m")
+		    	  .append("\nAccuracy: ").append(lastLocation.getAccuracy()).append(" m radius")
+		    	  .append("\nSpeed: ").append(lastLocation.getSpeed()).append(" m/s").toString();
+		    	mGPSDebugInfo.setText(gpsInfo);
+	    	}
 	    	mLastCheckText.setText(humanTimeDifference(lastReport, new Date().getTime()));
 	    	mLastCheckText.postDelayed(onEverySecond, 1000);
 	    }

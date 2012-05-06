@@ -16,10 +16,12 @@ import org.apache.http.message.BasicNameValuePair;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.util.Log;
 
 import com.jakemcginty.voyagr.VoyagrService;
+import com.jakemcginty.voyagr.preferences.Prefs;
 
 public class ReportPostService extends IntentService {
 
@@ -48,6 +50,7 @@ public class ReportPostService extends IntentService {
 			postData.add(new BasicNameValuePair("latitude",  String.valueOf(location.getLatitude())));
 			postData.add(new BasicNameValuePair("altitude",  String.valueOf(location.getAltitude())));
 			postData.add(new BasicNameValuePair("accuracy",  String.valueOf(location.getAccuracy())));
+			postData.add(new BasicNameValuePair("speed",  String.valueOf(location.getSpeed())));
 			httppost.setEntity(new UrlEncodedFormEntity(postData));
 			Log.d(tag, "Submission data created for location " +location.toString()+ ", attempting to execute POST request...");
 			HttpResponse response = httpclient.execute(httppost);
@@ -57,7 +60,13 @@ public class ReportPostService extends IntentService {
 			Intent i = new Intent();
 			i.setAction(VoyagrService.LOCATION_UPDATE);
 			i.putExtra("lastReport", new Date().getTime());
+			i.putExtra("location", location);
 			sendBroadcast(i);
+
+			/* THIS IS A MO-FUCKIN HACK so people can see the latest broadcast after the activity is reopened. Add persistent storage (SQLite perhaps) soon. */
+			SharedPreferences settings = getSharedPreferences(Prefs.prefsName, 0);
+			SharedPreferences.Editor editor = settings.edit();
+			editor.putLong("lastReport", new Date().getTime());
 	    } catch (ClientProtocolException e) {
 	    	Log.e(tag, "ClientProtocolException: " + e.getMessage());
 	    } catch (IOException e) {
