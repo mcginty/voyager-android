@@ -112,12 +112,12 @@ public class VoyagrService extends Service implements LocationListener {
     // RemoteService for a more complete example.
 	private final IBinder mBinder = new LocalBinder();
 
-	synchronized void setTrackingDuration(long duration) {
+	public synchronized void setTrackingDuration(long duration) {
 		this.duration = duration;
 		startTracking();
 	}
 
-	synchronized void startTracking() {
+	public synchronized void startTracking() {
 		lm.removeUpdates(VoyagrService.this);
 		lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, duration, 0f, VoyagrService.this);
 
@@ -133,7 +133,7 @@ public class VoyagrService extends Service implements LocationListener {
         startForeground(1, notification);
 	}
 
-	synchronized void stopTracking() {
+	public synchronized void stopTracking() {
 		lm.removeUpdates(this);
 		stopForeground(true);
 	}

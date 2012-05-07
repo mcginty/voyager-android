@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <item android:id="@+id/menu_gps_toggle"
+      android:title="GPS Toggle"
+      android:icon="@drawable/location_found"
+      android:showAsAction="always"/>
+    
+    <item android:id="@+id/menu_new_voyage"
+      android:title="New Voyage"
+      android:icon="@drawable/new_voyage"
+      android:showAsAction="always"/>
+    
+    <item android:id="@+id/menu_share_voyage"
+      android:title="Share Voyage"
+      android:icon="@drawable/share"
+      android:showAsAction="always"/>
+</menu>

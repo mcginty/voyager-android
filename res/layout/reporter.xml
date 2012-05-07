@@ -38,13 +38,6 @@
         android:text="@string/gpsdebugtextdefault"
         android:textSize="10dp" />
 
-    <CheckBox
-        android:id="@+id/reportLocationCheckbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:checked="true"
-        android:text="@string/reportlocation" />
-
     <TextView
         android:id="@+id/durationSelectLabel"
         android:layout_width="wrap_content"
