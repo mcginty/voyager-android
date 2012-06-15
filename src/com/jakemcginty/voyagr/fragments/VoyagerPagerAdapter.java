@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 public class VoyagerPagerAdapter extends FragmentPagerAdapter {
-	protected static final String[] CONTENT = new String[] { "Summary", "Stats" };
+	protected static final String[] CONTENT = new String[] { "Current Trip", "Stats" };
 	private int mCount = CONTENT.length;
 
 	public VoyagerPagerAdapter(FragmentManager fm) {

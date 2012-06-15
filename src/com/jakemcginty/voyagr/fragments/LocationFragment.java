@@ -39,7 +39,6 @@ public class LocationFragment extends SherlockFragment {
 	SharedPreferences settings;
 	static final String tag = "LocationFragment"; // for Log
 	private VoyagrService mBoundService;
-	TextView mLastCheckText, mGPSDebugInfo, mToURLText;
 	CheckBox mReportCheck;
 	Spinner  mDurationSelect;
 	ListView lv;
@@ -78,11 +77,7 @@ public class LocationFragment extends SherlockFragment {
 		reportActivity = (ReportingActivity) getActivity();
 		settings = reportActivity.getSharedPreferences(Prefs.prefsName, 0);
 		postURL = settings.getString("postURL", Prefs.defaultPostURL);
-		mLastCheckText  = (TextView) v.findViewById(R.id.lastCheckText);
-		mGPSDebugInfo   = (TextView) v.findViewById(R.id.GPSDebugText);
-		mToURLText	    = (TextView) v.findViewById(R.id.toURL);
 		mDurationSelect = (Spinner)  v.findViewById(R.id.durationSelect);
-		mLastCheckText.post(onEverySecond);
 		
 		final SharedPreferences settings = getActivity().getSharedPreferences(Prefs.prefsName, 0);
 		String interval = settings.getString("gps_interval", null);
@@ -100,13 +95,14 @@ public class LocationFragment extends SherlockFragment {
 		SummaryItemArrayAdapter adapter = new SummaryItemArrayAdapter(reportActivity, R.layout.summary_listitem, summaryList);
 		lv = (ListView) v.findViewById(R.id.summary_list);
 		lv.setAdapter(adapter);
+		lv.post(onEverySecond);
 
-		/* Attempt to make the domain pretty when presenting it to the user */
+		/* Attempt to make the domain pretty when presenting it to the user
 		try {
 			mToURLText.setText("to " + new URL(postURL).getHost());
 		} catch (MalformedURLException e) {
 			mToURLText.setText("to " + postURL);
-		}
+		}*/
         mDurationSelect.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -176,19 +172,26 @@ public class LocationFragment extends SherlockFragment {
 	    public void run() {
 	    	lastReport = reportActivity.getLastReport();
 	    	lastLocation = reportActivity.getLastLocation();
-	    	TextView content = (TextView) lv.getChildAt(0).findViewById(R.id.summary_item_content);
-	    	TextView desc = (TextView) lv.getChildAt(0).findViewById(R.id.summary_item_desc);
+	    	TextView gps_content = (TextView) lv.getChildAt(0).findViewById(R.id.summary_item_content);
+	    	TextView gps_desc = (TextView) lv.getChildAt(0).findViewById(R.id.summary_item_desc);
+	    	TextView post_content = (TextView) lv.getChildAt(1).findViewById(R.id.summary_item_content);
+	    	TextView post_desc = (TextView) lv.getChildAt(1).findViewById(R.id.summary_item_desc);
 	    	if (lastLocation != null) {
 	    		SummaryItemArrayAdapter adapter = (SummaryItemArrayAdapter) lv.getAdapter();
 	    		
-	    		content.setText(String.format("%f, %f", lastLocation.getLatitude(), lastLocation.getLongitude()));
-	    		desc.setText(String.format("%fm/s, %fm above sea, %fm accurate", lastLocation.getSpeed(), lastLocation.getAltitude(), lastLocation.getAccuracy()));
+	    		gps_content.setText(String.format("%f, %f", lastLocation.getLatitude(), lastLocation.getLongitude()));
+	    		gps_desc.setText(String.format("%.1fm/s, %.1fm above sea, %.1fm accurate", lastLocation.getSpeed(), lastLocation.getAltitude(), lastLocation.getAccuracy()));
 	    	} else {
-	    		content.setText("waiting...");
-	    		desc.setText(null);
+	    		gps_content.setText("waiting...");
+	    		gps_desc.setText(null);
 	    	}
-	    	mLastCheckText.setText(humanTimeDifference(lastReport, new Date().getTime()));
-	    	mLastCheckText.postDelayed(onEverySecond, 1000);
+	    	
+	    	if (lastReport > 0) {
+	    		post_desc.setText(String.format("Last successful report was %s", humanTimeDifference(lastReport, new Date().getTime())));
+	    	} else {
+	    		post_desc.setText("No successful reports yet...");
+	    	}
+	    	lv.postDelayed(onEverySecond, 1000);
 	    }
 	};
 }

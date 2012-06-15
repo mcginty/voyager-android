@@ -1258,7 +1258,6 @@ containing a value of this type.
         public static final int web=0x7f020116;
     }
     public static final class id {
-        public static final int GPSDebugText=0x7f0a0044;
         public static final int abs__action_bar=0x7f0a0027;
         public static final int abs__action_bar_container=0x7f0a0026;
         public static final int abs__action_bar_subtitle=0x7f0a0016;
@@ -1292,19 +1291,17 @@ containing a value of this type.
         public static final int contentPanel=0x7f0a0033;
         public static final int customPanel=0x7f0a0036;
         public static final int disableHome=0x7f0a0009;
-        public static final int durationSelect=0x7f0a0046;
-        public static final int durationSelectLabel=0x7f0a0045;
+        public static final int durationSelect=0x7f0a0042;
+        public static final int durationSelectLabel=0x7f0a0041;
         public static final int homeAsUp=0x7f0a0006;
         public static final int horizontal=0x7f0a0010;
         public static final int icon=0x7f0a0030;
         public static final int indicator=0x7f0a003e;
-        public static final int lastCheckLabel=0x7f0a0041;
-        public static final int lastCheckText=0x7f0a0042;
         public static final int listMode=0x7f0a0002;
         public static final int login=0x7f0a003d;
-        public static final int menu_gps_toggle=0x7f0a004c;
-        public static final int menu_new_voyage=0x7f0a004d;
-        public static final int menu_share_voyage=0x7f0a004e;
+        public static final int menu_gps_toggle=0x7f0a0048;
+        public static final int menu_new_voyage=0x7f0a0049;
+        public static final int menu_share_voyage=0x7f0a004a;
         public static final int message=0x7f0a0035;
         public static final int none=0x7f0a0012;
         public static final int normal=0x7f0a0001;
@@ -1318,18 +1315,17 @@ containing a value of this type.
         public static final int showCustom=0x7f0a0008;
         public static final int showHome=0x7f0a0005;
         public static final int showTitle=0x7f0a0007;
-        public static final int summary_item_content=0x7f0a004a;
-        public static final int summary_item_desc=0x7f0a004b;
-        public static final int summary_item_icon=0x7f0a0048;
-        public static final int summary_item_title=0x7f0a0049;
+        public static final int summary_item_content=0x7f0a0046;
+        public static final int summary_item_desc=0x7f0a0047;
+        public static final int summary_item_icon=0x7f0a0044;
+        public static final int summary_item_title=0x7f0a0045;
         public static final int summary_list=0x7f0a0040;
         public static final int tabMode=0x7f0a0003;
-        public static final int textView1=0x7f0a0047;
+        public static final int textView1=0x7f0a0043;
         public static final int titleDivider=0x7f0a0032;
         public static final int titleDividerTop=0x7f0a002e;
         public static final int title_container=0x7f0a003a;
         public static final int title_template=0x7f0a002f;
-        public static final int toURL=0x7f0a0043;
         public static final int topPanel=0x7f0a002d;
         public static final int triangle=0x7f0a0013;
         public static final int underline=0x7f0a0014;

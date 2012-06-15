@@ -88,18 +88,12 @@ public class VoyagrService extends Service implements LocationListener {
 		switch (status) {
 		case LocationProvider.OUT_OF_SERVICE:
 			Log.v(tag, "Status Changed: Out of Service");
-			Toast.makeText(this, "Status Changed: Out of Service",
-					Toast.LENGTH_SHORT).show();
 			break;
 		case LocationProvider.TEMPORARILY_UNAVAILABLE:
 			Log.v(tag, "Status Changed: Temporarily Unavailable");
-			Toast.makeText(this, "Status Changed: Temporarily Unavailable",
-					Toast.LENGTH_SHORT).show();
 			break;
 		case LocationProvider.AVAILABLE:
 			Log.v(tag, "Status Changed: Available");
-			Toast.makeText(this, "Status Changed: Available",
-					Toast.LENGTH_SHORT).show();
 			break;
 		}
 	}

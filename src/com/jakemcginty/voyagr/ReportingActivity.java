@@ -202,10 +202,8 @@ public class ReportingActivity extends SherlockFragmentActivity  {
 			}
 			return true;
 		case R.id.menu_new_voyage:
-			Toast.makeText(this, "Not yet implemented. Sorry.", Toast.LENGTH_SHORT);
 			return true;
 		case R.id.menu_share_voyage:
-			Toast.makeText(this, "Not yet implemented. Sorry.", Toast.LENGTH_SHORT);
 			return true;
 		default:
             return super.onOptionsItemSelected(item);

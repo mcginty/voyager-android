@@ -14,39 +14,6 @@
         />
 
     <TextView
-        android:id="@+id/lastCheckLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="@string/lastlocation"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <TextView
-        android:id="@+id/lastCheckText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="0dp"
-        android:text="@string/lastchecktextdefault"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="40dp" />
-
-    <TextView
-        android:id="@+id/toURL"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
-        android:id="@+id/GPSDebugText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:text="@string/gpsdebugtextdefault"
-        android:textSize="10dp" />
-
-    <TextView
         android:id="@+id/durationSelectLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

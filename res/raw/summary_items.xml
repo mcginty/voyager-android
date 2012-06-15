@@ -1,4 +1,5 @@
 <summary_items>
     <summary_item title="Location" content="40.43432, 80.53204392403" desc="%fm/s, %dm above sea, %dm accurate" icon="map" />
     <summary_item title="URL" content="jake.su/voyage" desc="Last successful report was %s" icon="web" />
+    <summary_item title="Frequency" content="Every 1 minute" desc="Click to change" icon="location_searching" />
 </summary_items>
