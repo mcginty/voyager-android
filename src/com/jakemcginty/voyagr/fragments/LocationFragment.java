@@ -1,8 +1,10 @@
 package com.jakemcginty.voyagr.fragments;
 
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,8 +21,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -28,6 +29,9 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.jakemcginty.voyagr.R;
 import com.jakemcginty.voyagr.ReportingActivity;
 import com.jakemcginty.voyagr.VoyagrService;
+import com.jakemcginty.voyagr.lists.summary.SummaryItem;
+import com.jakemcginty.voyagr.lists.summary.SummaryItemArrayAdapter;
+import com.jakemcginty.voyagr.lists.summary.SummaryItemParser;
 import com.jakemcginty.voyagr.preferences.Prefs;
 
 public class LocationFragment extends SherlockFragment {
@@ -38,6 +42,7 @@ public class LocationFragment extends SherlockFragment {
 	TextView mLastCheckText, mGPSDebugInfo, mToURLText;
 	CheckBox mReportCheck;
 	Spinner  mDurationSelect;
+	ListView lv;
 	private String postURL;
 	long     lastReport = 0L;
 	Location lastLocation = null;
@@ -78,6 +83,23 @@ public class LocationFragment extends SherlockFragment {
 		mToURLText	    = (TextView) v.findViewById(R.id.toURL);
 		mDurationSelect = (Spinner)  v.findViewById(R.id.durationSelect);
 		mLastCheckText.post(onEverySecond);
+		
+		final SharedPreferences settings = getActivity().getSharedPreferences(Prefs.prefsName, 0);
+		String interval = settings.getString("gps_interval", null);
+		for (int position=0; position < mDurationSelect.getAdapter().getCount(); position++) {
+			String item = (String) mDurationSelect.getAdapter().getItem(position);
+			if (item != null && item.equals(interval)) {
+				mDurationSelect.setSelection(position);
+			}
+		}
+
+		SummaryItemParser summaryParser = new SummaryItemParser();
+		InputStream inputStream = getResources().openRawResource(R.raw.summary_items);
+		summaryParser.parse(inputStream);
+		List<SummaryItem> summaryList = summaryParser.getList();
+		SummaryItemArrayAdapter adapter = new SummaryItemArrayAdapter(reportActivity, R.layout.summary_listitem, summaryList);
+		lv = (ListView) v.findViewById(R.id.summary_list);
+		lv.setAdapter(adapter);
 
 		/* Attempt to make the domain pretty when presenting it to the user */
 		try {
@@ -89,6 +111,9 @@ public class LocationFragment extends SherlockFragment {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				String value = mDurationSelect.getAdapter().getItem(position).toString();
+				SharedPreferences.Editor editor = settings.edit();
+				editor.putString("gps_interval", value);
+				editor.commit();
 				long duration = 5L * 1000L; // default duration in milliseconds if we can't parse for some reason
 				Log.d(tag,"Item " +position+ " selected with id " +id+ ". Maps to: " +value);
 				if (value.indexOf("fast as possible") > -1) {
@@ -151,14 +176,16 @@ public class LocationFragment extends SherlockFragment {
 	    public void run() {
 	    	lastReport = reportActivity.getLastReport();
 	    	lastLocation = reportActivity.getLastLocation();
+	    	TextView content = (TextView) lv.getChildAt(0).findViewById(R.id.summary_item_content);
+	    	TextView desc = (TextView) lv.getChildAt(0).findViewById(R.id.summary_item_desc);
 	    	if (lastLocation != null) {
-		    	String gpsInfo = (new StringBuilder())
-		    	  .append("Latitude: ").append(lastLocation.getLatitude())
-		    	  .append("\nLongitude: ").append(lastLocation.getLongitude())
-		    	  .append("\nAltitude: ").append(lastLocation.getAltitude()).append(" m")
-		    	  .append("\nAccuracy: ").append(lastLocation.getAccuracy()).append(" m radius")
-		    	  .append("\nSpeed: ").append(lastLocation.getSpeed()).append(" m/s").toString();
-		    	mGPSDebugInfo.setText(gpsInfo);
+	    		SummaryItemArrayAdapter adapter = (SummaryItemArrayAdapter) lv.getAdapter();
+	    		
+	    		content.setText(String.format("%f, %f", lastLocation.getLatitude(), lastLocation.getLongitude()));
+	    		desc.setText(String.format("%fm/s, %fm above sea, %fm accurate", lastLocation.getSpeed(), lastLocation.getAltitude(), lastLocation.getAccuracy()));
+	    	} else {
+	    		content.setText("waiting...");
+	    		desc.setText(null);
 	    	}
 	    	mLastCheckText.setText(humanTimeDifference(lastReport, new Date().getTime()));
 	    	mLastCheckText.postDelayed(onEverySecond, 1000);

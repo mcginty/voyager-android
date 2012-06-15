@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.GradientDrawable.Orientation;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -133,6 +135,9 @@ public class ReportingActivity extends SherlockFragmentActivity  {
 		mIndicator.setViewPager(mPager);
 		
 		ab = getSupportActionBar();
+		//ab.setSplitBackgroundDrawable(new GradientDrawable(Orientation.TOP_BOTTOM, new int[]{0xffc5f34a, 0xff79c024}));
+		ab.setSplitBackgroundDrawable(new GradientDrawable(Orientation.TOP_BOTTOM, new int[]{0x77dddddd, 0x77ffffff}));
+		ab.setBackgroundDrawable(new GradientDrawable(Orientation.TOP_BOTTOM, new int[]{0xff484848, 0xff222222}));
 		doBindService();
 
         Log.d(tag, "Reporting activity created");

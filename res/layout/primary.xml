@@ -11,13 +11,13 @@
         android:padding="8dip"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
-        android:background="#00000000"
-        app:footerColor="#FF666666"
-        app:footerLineHeight="1dp"
+        android:background="#ff484848"
+        app:footerColor="#FFc5f34a"
+        app:footerLineHeight="2dp"
         app:footerIndicatorHeight="3dp"
         app:footerIndicatorStyle="underline"
-        app:textColor="#AA000000"
-        app:selectedColor="#FF000000"
+        app:textColor="#EEFFFFFF"
+        app:selectedColor="#EEFFFFFF"
         app:selectedBold="true"
         />
     <android.support.v4.view.ViewPager
