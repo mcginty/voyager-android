@@ -6,8 +6,8 @@
     android:orientation="horizontal"
     android:background="@drawable/listitem_normal"
     android:divider="#33000000"
-    android:paddingTop="5dip"
-    android:paddingBottom="5dip"
+    android:paddingTop="15dip"
+    android:paddingBottom="15dip"
     >
 
     <ImageView
@@ -23,7 +23,7 @@
         android:src="@drawable/web" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:gravity="center|left"
         android:orientation="vertical" >
@@ -33,11 +33,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Summary Item Title"
+            android:textColor="#66000000"
             android:shadowColor="#ffffffff"
             android:shadowDx="0"
             android:shadowDy="-2"
             android:shadowRadius="0.5"
-            android:textSize="22dp" />
+            android:textSize="15dp" />
+        
+        <View
+            android:layout_width="fill_parent"
+			android:layout_height="1dip"
+			android:background="#05000000"
+			android:layout_marginRight="20dip"
+			android:layout_marginTop="2dip" />
+        
+        <View
+            android:layout_width="fill_parent"
+			android:layout_height="1dip"
+			android:background="#44FFFFFF"
+			android:layout_marginRight="20dip"
+			android:layout_marginBottom="2dip" />
 
         <TextView
             android:id="@+id/summary_item_content"
@@ -51,7 +66,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Description"
-            android:textColor="#666" />
+            android:textColor="#666"
+            android:layout_marginBottom="5dip" />
     </LinearLayout>
 
 </LinearLayout>
