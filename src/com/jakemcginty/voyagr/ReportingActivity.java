@@ -17,14 +17,11 @@ import android.util.Log;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.jakemcginty.voyagr.fragments.VoyagerPagerAdapter;
 import com.jakemcginty.voyagr.fragments.VoyagerTitlePagerAdapter;
 import com.jakemcginty.voyagr.preferences.Prefs;
