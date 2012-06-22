@@ -1,4 +1,4 @@
-package com.jakemcginty.voyagr.lists.summary;
+package com.jakemcginty.voyagr.summary.list;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -1,5 +1,7 @@
 package com.jakemcginty.voyagr.fragments;
 
+import com.jakemcginty.voyagr.summary.SummaryFragment;
+
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -15,9 +17,9 @@ public class VoyagerPagerAdapter extends FragmentPagerAdapter {
 	@Override
 	public Fragment getItem(int num) {
 		switch (num) {
-		case 0: return LocationFragment.newInstance();
+		case 0: return SummaryFragment.newInstance();
 		case 1: return StatsFragment.newInstance();
-		default: return LocationFragment.newInstance();
+		default: return SummaryFragment.newInstance();
 		}
 	}
 

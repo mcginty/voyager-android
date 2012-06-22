@@ -1,4 +1,4 @@
-package com.jakemcginty.voyagr.fragments;
+package com.jakemcginty.voyagr.summary;
 
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -29,12 +29,12 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.jakemcginty.voyagr.R;
 import com.jakemcginty.voyagr.ReportingActivity;
 import com.jakemcginty.voyagr.VoyagrService;
-import com.jakemcginty.voyagr.lists.summary.SummaryItem;
-import com.jakemcginty.voyagr.lists.summary.SummaryItemArrayAdapter;
-import com.jakemcginty.voyagr.lists.summary.SummaryItemParser;
 import com.jakemcginty.voyagr.preferences.Prefs;
+import com.jakemcginty.voyagr.summary.list.SummaryItem;
+import com.jakemcginty.voyagr.summary.list.SummaryItemArrayAdapter;
+import com.jakemcginty.voyagr.summary.list.SummaryItemParser;
 
-public class LocationFragment extends SherlockFragment {
+public class SummaryFragment extends SherlockFragment {
 	
 	SharedPreferences settings;
 	static final String tag = "LocationFragment"; // for Log
@@ -63,8 +63,8 @@ public class LocationFragment extends SherlockFragment {
 	}
 	BroadcastReceiver receiver = new ReportPostReceiver();
 
-	public static LocationFragment newInstance() {
-		LocationFragment fragment = new LocationFragment();
+	public static SummaryFragment newInstance() {
+		SummaryFragment fragment = new SummaryFragment();
 
 		return fragment;
 	}
