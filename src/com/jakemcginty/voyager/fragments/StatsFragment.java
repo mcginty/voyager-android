@@ -1,4 +1,4 @@
-package com.jakemcginty.voyagr.fragments;
+package com.jakemcginty.voyager.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.jakemcginty.voyagr.R;
+import com.jakemcginty.voyager.R;
 
 public class StatsFragment extends SherlockFragment {
 	

@@ -1,4 +1,4 @@
-package com.jakemcginty.voyagr.summary.list;
+package com.jakemcginty.voyager.summary.list;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,7 +18,7 @@ import org.xml.sax.SAXException;
 
 import android.util.Log;
 
-import com.jakemcginty.voyagr.R;
+import com.jakemcginty.voyager.R;
 
 public class SummaryItemParser {
 	private static final String tag = "SummaryItemParser";

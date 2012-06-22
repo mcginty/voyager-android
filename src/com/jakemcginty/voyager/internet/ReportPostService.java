@@ -1,4 +1,4 @@
-package com.jakemcginty.voyagr.internet;
+package com.jakemcginty.voyager.internet;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,8 +20,8 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.util.Log;
 
-import com.jakemcginty.voyagr.VoyagrService;
-import com.jakemcginty.voyagr.preferences.Prefs;
+import com.jakemcginty.voyager.VoyagrService;
+import com.jakemcginty.voyager.preferences.Prefs;
 
 public class ReportPostService extends IntentService {
 

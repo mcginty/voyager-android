@@ -1,4 +1,4 @@
-package com.jakemcginty.voyagr;
+package com.jakemcginty.voyager;
 
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -22,9 +22,10 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.jakemcginty.voyagr.fragments.VoyagerPagerAdapter;
-import com.jakemcginty.voyagr.fragments.VoyagerTitlePagerAdapter;
-import com.jakemcginty.voyagr.preferences.Prefs;
+import com.jakemcginty.voyager.R;
+import com.jakemcginty.voyager.fragments.VoyagerPagerAdapter;
+import com.jakemcginty.voyager.fragments.VoyagerTitlePagerAdapter;
+import com.jakemcginty.voyager.preferences.Prefs;
 import com.viewpagerindicator.PageIndicator;
 import com.viewpagerindicator.TitlePageIndicator;
 

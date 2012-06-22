@@ -1,4 +1,4 @@
-package com.jakemcginty.voyagr.preferences;
+package com.jakemcginty.voyager.preferences;
 
 public final class Prefs {
 	public static final String defaultPostURL = "http://jake.su/report";

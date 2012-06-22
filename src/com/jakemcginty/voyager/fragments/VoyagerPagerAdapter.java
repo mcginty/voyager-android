@@ -1,6 +1,6 @@
-package com.jakemcginty.voyagr.fragments;
+package com.jakemcginty.voyager.fragments;
 
-import com.jakemcginty.voyagr.summary.SummaryFragment;
+import com.jakemcginty.voyager.summary.SummaryFragment;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

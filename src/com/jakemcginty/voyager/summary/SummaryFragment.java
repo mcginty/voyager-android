@@ -1,4 +1,4 @@
-package com.jakemcginty.voyagr.summary;
+package com.jakemcginty.voyager.summary;
 
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -26,13 +26,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.jakemcginty.voyagr.R;
-import com.jakemcginty.voyagr.ReportingActivity;
-import com.jakemcginty.voyagr.VoyagrService;
-import com.jakemcginty.voyagr.preferences.Prefs;
-import com.jakemcginty.voyagr.summary.list.SummaryItem;
-import com.jakemcginty.voyagr.summary.list.SummaryItemArrayAdapter;
-import com.jakemcginty.voyagr.summary.list.SummaryItemParser;
+import com.jakemcginty.voyager.R;
+import com.jakemcginty.voyager.ReportingActivity;
+import com.jakemcginty.voyager.VoyagrService;
+import com.jakemcginty.voyager.preferences.Prefs;
+import com.jakemcginty.voyager.summary.list.SummaryItem;
+import com.jakemcginty.voyager.summary.list.SummaryItemArrayAdapter;
+import com.jakemcginty.voyager.summary.list.SummaryItemParser;
 
 public class SummaryFragment extends SherlockFragment {
 	

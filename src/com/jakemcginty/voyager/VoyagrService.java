@@ -1,4 +1,4 @@
-package com.jakemcginty.voyagr;
+package com.jakemcginty.voyager;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -14,8 +14,9 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.jakemcginty.voyagr.internet.ReportPostService;
-import com.jakemcginty.voyagr.preferences.Prefs;
+import com.jakemcginty.voyager.R;
+import com.jakemcginty.voyager.internet.ReportPostService;
+import com.jakemcginty.voyager.preferences.Prefs;
 
 public class VoyagrService extends Service implements LocationListener {
 

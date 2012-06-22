@@ -1,4 +1,4 @@
-package com.jakemcginty.voyagr.summary.list;
+package com.jakemcginty.voyager.summary.list;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.jakemcginty.voyagr.R;
+import com.jakemcginty.voyager.R;
 
 public class SummaryItemArrayAdapter extends ArrayAdapter<SummaryItem> {
 	private static final String tag = "SummaryItemArrayAdapter";

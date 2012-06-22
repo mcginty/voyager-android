@@ -1,4 +1,4 @@
-package com.jakemcginty.voyagr.summary.list;
+package com.jakemcginty.voyager.summary.list;
 
 public class SummaryItem {
 	public String title, content, desc;
