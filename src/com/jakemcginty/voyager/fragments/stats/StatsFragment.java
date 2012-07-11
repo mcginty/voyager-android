@@ -1,4 +1,4 @@
-package com.jakemcginty.voyager.fragments;
+package com.jakemcginty.voyager.fragments.stats;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

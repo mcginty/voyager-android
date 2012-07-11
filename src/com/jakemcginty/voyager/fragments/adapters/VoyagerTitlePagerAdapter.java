@@ -1,4 +1,4 @@
-package com.jakemcginty.voyager.fragments;
+package com.jakemcginty.voyager.fragments.adapters;
 
 import com.viewpagerindicator.TitleProvider;
 

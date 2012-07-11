@@ -1,4 +1,4 @@
-package com.jakemcginty.voyager.summary.list;
+package com.jakemcginty.voyager.fragments.summary.list;
 
 import java.io.IOException;
 import java.io.InputStream;
