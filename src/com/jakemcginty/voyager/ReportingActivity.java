@@ -32,8 +32,8 @@ import com.viewpagerindicator.TitlePageIndicator;
 public class ReportingActivity extends SherlockFragmentActivity  {
 	SharedPreferences settings;
 	static final String tag = "ReportingActivity"; // for Log
-	private VoyagrService mBoundService;
-	public VoyagrService getmBoundService() {
+	private VoyagerService mBoundService;
+	public VoyagerService getmBoundService() {
 		return mBoundService;
 	}
 	boolean gpsActive;
@@ -65,7 +65,7 @@ public class ReportingActivity extends SherlockFragmentActivity  {
         @Override
         public void onReceive(Context context, Intent intent) {
         	Log.d(tag, "braodcast received with intent action " + intent.getAction());
-            if (intent.getAction().equals(VoyagrService.LOCATION_UPDATE)) {
+            if (intent.getAction().equals(VoyagerService.LOCATION_UPDATE)) {
             	lastReport   = intent.getLongExtra("lastReport", lastReport);
             	lastLocation = intent.getParcelableExtra("location");
             }
@@ -80,7 +80,7 @@ public class ReportingActivity extends SherlockFragmentActivity  {
 	        // interact with the service.  Because we have bound to a explicit
 	        // service that we know is running in our own process, we can
 	        // cast its IBinder to a concrete class and directly access it.
-	        mBoundService = ((VoyagrService.LocalBinder)service).getService();
+	        mBoundService = ((VoyagerService.LocalBinder)service).getService();
 	        gpsActive = true;
 
 	        // Tell the user about this for our demo.
@@ -104,7 +104,7 @@ public class ReportingActivity extends SherlockFragmentActivity  {
 	    // we know will be running in our own process (and thus won't be
 	    // supporting component replacement by other applications).
 	    bindService(new Intent(ReportingActivity.this, 
-	            VoyagrService.class), mConnection, Context.BIND_AUTO_CREATE);
+	            VoyagerService.class), mConnection, Context.BIND_AUTO_CREATE);
 	    mIsBound = true;
 	}
 
@@ -120,7 +120,7 @@ public class ReportingActivity extends SherlockFragmentActivity  {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.primary);
+		setContentView(R.layout.root);
 		settings = getSharedPreferences(Prefs.prefsName, 0);
 		postURL = settings.getString("postURL", Prefs.defaultPostURL);
 
@@ -133,24 +133,23 @@ public class ReportingActivity extends SherlockFragmentActivity  {
 		mIndicator.setViewPager(mPager);
 		
 		ab = getSupportActionBar();
-		//ab.setSplitBackgroundDrawable(new GradientDrawable(Orientation.TOP_BOTTOM, new int[]{0xffc5f34a, 0xff79c024}));
 		ab.setSplitBackgroundDrawable(new GradientDrawable(Orientation.TOP_BOTTOM, new int[]{0x77dddddd, 0x77ffffff}));
-		ab.setBackgroundDrawable(new GradientDrawable(Orientation.TOP_BOTTOM, new int[]{0xff484848, 0xff222222}));
+		ab.setBackgroundDrawable(new GradientDrawable(Orientation.TOP_BOTTOM, new int[]{0xff333333, 0xff222222}));
+		ab.setHomeButtonEnabled(true);
 		doBindService();
 
         Log.d(tag, "Reporting activity created");
     }
 
+	/*
+	 * onResume is is always called after onStart, even if the app hasn't been
+	 * paused
+	 *
+	 */
     @Override
 	protected void onResume() {
-		/*
-		 * onResume is is always called after onStart, even if the app hasn't been
-		 * paused
-		 *
-		 * add location listener and request updates every 1000 ms or 10 meters
-		 */
     	Log.d(tag, "Registering receiver with receiverFilter.");
-		registerReceiver(receiver, new IntentFilter(VoyagrService.LOCATION_UPDATE));
+		registerReceiver(receiver, new IntentFilter(VoyagerService.LOCATION_UPDATE));
 		super.onResume();
 	}
 
@@ -178,14 +177,12 @@ public class ReportingActivity extends SherlockFragmentActivity  {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		Log.d(tag, "Inflating ActionBar menu...");
 		getSupportMenuInflater().inflate(R.menu.actionbar, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
 	public boolean onMenuItemSelected(int type, MenuItem item) {
-		Log.d(tag, "MENU ITEM called with id "+item.getItemId()+".");
 		switch (item.getItemId()) {
 		case R.id.menu_gps_toggle:
 			if (gpsActive) {

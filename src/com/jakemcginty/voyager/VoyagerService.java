@@ -18,7 +18,7 @@ import com.jakemcginty.voyager.R;
 import com.jakemcginty.voyager.internet.ReportPostService;
 import com.jakemcginty.voyager.preferences.Prefs;
 
-public class VoyagrService extends Service implements LocationListener {
+public class VoyagerService extends Service implements LocationListener {
 
 	public static final String LOCATION_UPDATE = Prefs.broadcastAction;
 	boolean reportGPS=true;
@@ -27,7 +27,7 @@ public class VoyagrService extends Service implements LocationListener {
 	private String postURL = Prefs.defaultPostURL;
 	private long duration = Prefs.defaultDuration;
 	
-	public VoyagrService() {
+	public VoyagerService() {
 		super();
 	}
 	
@@ -37,8 +37,8 @@ public class VoyagrService extends Service implements LocationListener {
      * IPC.
      */
 	public class LocalBinder extends Binder {
-        VoyagrService getService() {
-            return VoyagrService.this;
+        VoyagerService getService() {
+            return VoyagerService.this;
         }
     }
 
@@ -113,12 +113,12 @@ public class VoyagrService extends Service implements LocationListener {
 	}
 
 	public synchronized void startTracking() {
-		lm.removeUpdates(VoyagrService.this);
-		lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, duration, 0f, VoyagrService.this);
+		lm.removeUpdates(VoyagerService.this);
+		lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, duration, 0f, VoyagerService.this);
 
         // Display a notification about us starting.  We put an icon in the status bar.
         int icon = R.drawable.ic_stat_voyagr;
-        CharSequence voyagrTitle = "Voyagr";
+        CharSequence voyagrTitle = "Voyager";
         CharSequence voyagrText  = "Currently reporting your position.";
         Notification notification = new Notification(icon, voyagrText, System.currentTimeMillis());
         Intent notificationIntent = new Intent(this,ReportingActivity.class);

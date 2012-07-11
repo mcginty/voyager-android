@@ -3,7 +3,7 @@
     android:versionCode="1"
     android:versionName="0.7" xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="7" />
+    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="8" />
     <uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
@@ -17,6 +17,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name="com.jakemcginty.voyager.VoyagrService" android:icon="@drawable/ic_launcher"></service>
-	</application>
+        <service android:name="com.jakemcginty.voyager.VoyagerService" android:icon="@drawable/ic_launcher"></service>
+        <service android:name="com.jakemcginty.voyager.internet.ReportPostService" android:icon="@drawable/ic_launcher"></service>
+    </application>
 </manifest>

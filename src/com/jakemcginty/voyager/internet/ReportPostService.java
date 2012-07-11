@@ -20,7 +20,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.util.Log;
 
-import com.jakemcginty.voyager.VoyagrService;
+import com.jakemcginty.voyager.VoyagerService;
 import com.jakemcginty.voyager.preferences.Prefs;
 
 public class ReportPostService extends IntentService {
@@ -58,7 +58,7 @@ public class ReportPostService extends IntentService {
 			Log.d(tag, "POST data for location "+location.toString()+" succeeded with status " + response.getStatusLine());
 
 			Intent i = new Intent();
-			i.setAction(VoyagrService.LOCATION_UPDATE);
+			i.setAction(VoyagerService.LOCATION_UPDATE);
 			i.putExtra("lastReport", new Date().getTime());
 			i.putExtra("location", location);
 			sendBroadcast(i);

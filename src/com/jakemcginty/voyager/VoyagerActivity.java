@@ -8,7 +8,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import com.jakemcginty.voyager.R;
 
-public class VoyagrActivity extends Activity {
+public class VoyagerActivity extends Activity {
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {

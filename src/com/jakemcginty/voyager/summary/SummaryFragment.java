@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -28,20 +29,22 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.jakemcginty.voyager.R;
 import com.jakemcginty.voyager.ReportingActivity;
-import com.jakemcginty.voyager.VoyagrService;
+import com.jakemcginty.voyager.VoyagerService;
 import com.jakemcginty.voyager.preferences.Prefs;
 import com.jakemcginty.voyager.summary.list.SummaryItem;
 import com.jakemcginty.voyager.summary.list.SummaryItemArrayAdapter;
 import com.jakemcginty.voyager.summary.list.SummaryItemParser;
+import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 public class SummaryFragment extends SherlockFragment {
 	
 	SharedPreferences settings;
 	static final String tag = "LocationFragment"; // for Log
-	private VoyagrService mBoundService;
+	private VoyagerService mBoundService;
 	CheckBox mReportCheck;
 	Spinner  mDurationSelect;
 	ListView lv;
+	ImageView img_map;
 	private String postURL;
 	long     lastReport = 0L;
 	Location lastLocation = null;
@@ -55,7 +58,7 @@ public class SummaryFragment extends SherlockFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
         	Log.d(tag, "braodcast received with intent action " + intent.getAction());
-            if (intent.getAction().equals(VoyagrService.LOCATION_UPDATE)) {
+            if (intent.getAction().equals(VoyagerService.LOCATION_UPDATE)) {
             	lastReport   = intent.getLongExtra("lastReport", lastReport);
             	lastLocation = intent.getParcelableExtra("location");
             }
@@ -94,6 +97,7 @@ public class SummaryFragment extends SherlockFragment {
 		List<SummaryItem> summaryList = summaryParser.getList();
 		SummaryItemArrayAdapter adapter = new SummaryItemArrayAdapter(reportActivity, R.layout.summary_listitem, summaryList);
 		lv = (ListView) v.findViewById(R.id.summary_list);
+		img_map = (ImageView) v.findViewById(R.id.img_map);
 		lv.setAdapter(adapter);
 		lv.post(onEverySecond);
 
@@ -133,8 +137,7 @@ public class SummaryFragment extends SherlockFragment {
 
 				/* Tell our service to start tracking. TODO: uncomment this shit*/
 				mBoundService = reportActivity.getmBoundService();
-				if (mBoundService != null)
-					mBoundService.setTrackingDuration(duration);
+				if (mBoundService != null) mBoundService.setTrackingDuration(duration);
 			}
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
@@ -181,6 +184,8 @@ public class SummaryFragment extends SherlockFragment {
 	    		
 	    		gps_content.setText(String.format("%f, %f", lastLocation.getLatitude(), lastLocation.getLongitude()));
 	    		gps_desc.setText(String.format("%.1fm/s, %.1fm above sea, %.1fm accurate", lastLocation.getSpeed(), lastLocation.getAltitude(), lastLocation.getAccuracy()));
+	    		//TODO move this to its own "get google static image thingy"
+	    		UrlImageViewHelper.setUrlDrawable(img_map, "http://maps.google.com/maps/api/staticmap?center="+lastLocation.getLatitude()+","+lastLocation.getLongitude()+"&zoom=5&markers="+lastLocation.getLatitude()+","+lastLocation.getLongitude()+"&size="+img_map.getWidth()+"x"+img_map.getHeight()+"&sensor=true");
 	    	} else {
 	    		gps_content.setText("waiting...");
 	    		gps_desc.setText(null);
