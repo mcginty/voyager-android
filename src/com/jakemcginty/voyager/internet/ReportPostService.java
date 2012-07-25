@@ -45,6 +45,7 @@ public class ReportPostService extends IntentService {
 		try {
 			/* Create POST data to submit to the voyagr web application. */
 			List<NameValuePair> postData = new ArrayList<NameValuePair>(2);
+			postData.add(new BasicNameValuePair("trip_id", "1")); // TODO : add trip_id support
 			postData.add(new BasicNameValuePair("timestamp", String.valueOf(location.getTime())));
 			postData.add(new BasicNameValuePair("longitude", String.valueOf(location.getLongitude())));
 			postData.add(new BasicNameValuePair("latitude",  String.valueOf(location.getLatitude())));

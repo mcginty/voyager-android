@@ -68,12 +68,17 @@ public class SummaryFragment extends SherlockFragment {
 	}
 	BroadcastReceiver receiver = new ReportPostReceiver();
 
+	/**
+	 * Self-explanatorilarily gives back a new instance of this.
+	 * @return a new SummaryFragment instance
+	 */
 	public static SummaryFragment newInstance() {
-		SummaryFragment fragment = new SummaryFragment();
-
-		return fragment;
+		return new SummaryFragment();
 	}
 	
+	/**
+	 * Main listener for delegating summary ListItem clicks to handle their own tasks.
+	 */
 	private ListView.OnItemClickListener summaryItemClickedListener = new ListView.OnItemClickListener() {
 
 		@Override
@@ -84,21 +89,27 @@ public class SummaryFragment extends SherlockFragment {
 		
 	};
 	
+	/**
+	 * Whenever a new duration (GPS/POST period) is selected, we need to update our shit.
+	 */
 	private OnItemSelectedListener durationSelectedListener = new OnItemSelectedListener() {
 		@Override
 		public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+			// value = the text for the item they chose on screen
 			String value = mDurationSelect.getAdapter().getItem(position).toString();
+			Log.d(tag,"Item " +position+ " selected with id " +id+ ". Maps to: " +value);
+			// persist in preferences for the next time we start
 			SharedPreferences.Editor editor = settings.edit();
 			editor.putString("gps_interval", value);
 			editor.commit();
-			Log.d(tag,"Item " +position+ " selected with id " +id+ ". Maps to: " +value);
+			// convert the selection to a time we can actually use, and tell the service to update its duration accordingly
 			long duration = TimeUtil.stringPeriodToSecondsDuration(value);
 			mBoundService = mActivity.getmBoundService();
 			if (mBoundService != null) mBoundService.setTrackingDuration(duration);
 		}
 		@Override
 		public void onNothingSelected(AdapterView<?> parent) {
-			Log.w(tag, "Nothing was selected for some stupid weird inexplicable reason. Heading to the bomb shelter.");
+			Log.d(tag, "Nothing was selected. Heading to the bomb shelter.");
 		}
     };
 	
