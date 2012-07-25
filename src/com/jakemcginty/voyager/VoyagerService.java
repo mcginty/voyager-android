@@ -46,14 +46,14 @@ public class VoyagerService extends Service implements LocationListener {
     public void onCreate() {
         lm = (LocationManager) getSystemService(LOCATION_SERVICE);
         startTracking();
-        Log.d(tag, "VoyagrService created.");
+        Log.d(tag, "VoyagerService created.");
     }
 
     @Override
     public void onDestroy() {
     	stopTracking();
     	super.onDestroy();
-        Log.d(tag, "VoyagrService destroyed.");
+        Log.d(tag, "VoyagerService destroyed.");
     }
 
 	@Override
@@ -118,12 +118,12 @@ public class VoyagerService extends Service implements LocationListener {
 
         // Display a notification about us starting.  We put an icon in the status bar.
         int icon = R.drawable.ic_stat_voyagr;
-        CharSequence voyagrTitle = "Voyager";
-        CharSequence voyagrText  = "Currently reporting your position.";
-        Notification notification = new Notification(icon, voyagrText, System.currentTimeMillis());
+        CharSequence voyagerTitle = "Voyager";
+        CharSequence voyagerText  = "Currently reporting your position.";
+        Notification notification = new Notification(icon, voyagerText, System.currentTimeMillis());
         Intent notificationIntent = new Intent(this,ReportingActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-        notification.setLatestEventInfo(getApplicationContext(), voyagrTitle, voyagrText, contentIntent);
+        notification.setLatestEventInfo(getApplicationContext(), voyagerTitle, voyagerText, contentIntent);
         notification.flags |= Notification.FLAG_ONGOING_EVENT;
         startForeground(1, notification);
 	}

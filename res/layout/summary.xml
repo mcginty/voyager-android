@@ -22,13 +22,7 @@
         android:dividerHeight="1.5dip"
         />
 
-    <TextView
-        android:id="@+id/durationSelectLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:text="@string/durationselect" />
-
+    <!-- this guy is invisible, but we use him to handle spinny stuff that we trigger manually when needed -->
     <Spinner
         android:id="@+id/durationSelect"
         android:layout_width="fill_parent"
@@ -36,6 +30,7 @@
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:entries="@array/GPSPushDurations" />
+        android:entries="@array/GPSPushDurations"
+        android:visibility="invisible" />
 
 </LinearLayout>
