@@ -104,7 +104,7 @@ public class ReportingActivity extends SherlockFragmentActivity  {
 	    // we know will be running in our own process (and thus won't be
 	    // supporting component replacement by other applications).
 	    bindService(new Intent(ReportingActivity.this, 
-	            VoyagerService.class), mConnection, Context.BIND_AUTO_CREATE);
+	            VoyagerService.class), mConnection, Context.BIND_IMPORTANT);
 	    mIsBound = true;
 	}
 
@@ -136,6 +136,8 @@ public class ReportingActivity extends SherlockFragmentActivity  {
 		ab.setSplitBackgroundDrawable(new GradientDrawable(Orientation.TOP_BOTTOM, new int[]{0x77dddddd, 0x77ffffff}));
 		ab.setBackgroundDrawable(new GradientDrawable(Orientation.TOP_BOTTOM, new int[]{0xff333333, 0xff222222}));
 		ab.setHomeButtonEnabled(true);
+		 
+		startService(new Intent(ReportingActivity.this, VoyagerService.class));
 		doBindService();
 
         Log.d(tag, "Reporting activity created");
@@ -166,6 +168,7 @@ public class ReportingActivity extends SherlockFragmentActivity  {
 		super.onStop();
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putString("postURL", postURL);
+		editor.commit();
 		finish();
 	}
 
